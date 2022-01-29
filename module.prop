@@ -1,0 +1,6 @@
+id=incallvolume_rosemary
+name=Incall volume fix for rosemary
+version=v1
+versionCode=1
+author=Woomymy
+description=Fix incall volume on GSI for Redmi Note 10S
