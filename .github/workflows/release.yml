@@ -1,0 +1,29 @@
+---
+name: Publish module release ZIP
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  makezip:
+    name: Publish release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get module version
+        id: getversion
+        run: echo "::set-output name=version::$(awk -F '=' '{if ($1=="version") { print $2 }}' module.prop)"
+        shell: bash
+      - name: Get module id
+        id: getid
+        run: echo "::set-output name=id::$(awk -F '=' '{if ($1=="id") { print $2 }}' module.prop)"
+        shell: bash
+      - name: Create zip file
+        run: zip -0qry ./${{ steps.getid.outputs.id }}-${{ steps.getversion.outputs.version }}.zip config.sh META-INF module.prop README.md service.sh
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.getid.outputs.id }}-${{ steps.getversion.outputs.version }}.zip
+
